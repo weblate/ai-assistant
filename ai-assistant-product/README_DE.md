@@ -14,7 +14,7 @@ gewinnen. Dank seiner Mehrsprachigkeit kommuniziert der KI-Assistent mühelos au
 Englisch, Deutsch, Spanisch und weiteren Sprachen und stellt so sicher, dass Sie
 Unterstützung in Ihrer bevorzugten Sprache erhalten.
 
-![Chat-Dashboard](doc/img/chat-dashboard.png)
+![Chat Dashboard](doc/img/chat-dashboard.png)
 
 Der KI-Assistent bietet Ihnen nicht nur sofortige Hilfe, sondern ermöglicht
 Ihnen auch die Erstellung und Verwaltung von benutzerdefinierten Modellen und
@@ -101,7 +101,7 @@ grundlegende Webtechnologien wie HTML und CSS und wird eine sichere, skalierbare
 und effiziente Plattform liefern, die den Industriestandards und Best Practices
 entspricht. Dafür benötigen wir 3 Ingenieure, 1 Webdesigner und 2 Tester.`
 
-#### Demo zur Fehlerbehandlung
+#### Error Handling Demo
 
 **Anwendungsfall**
 
@@ -262,9 +262,8 @@ und einen neuen KI-Assistenten erstellen möchten. Klicken Sie dazu bitte auf di
 Schaltfläche „ **“ (KI-Assistenten löschen) „Delete** “ ( löschen) unten links
 auf der Detailseite des KI-Assistenten.
 
-Es erscheint ein Bestätigungsdialog. Sie können den KI-Assistenten vollständig
-löschen, indem Sie in diesem Dialog auf die Schaltfläche „ **“ (Entfernen) „** “
-(KI-Assistenten löschen) klicken.
+A confirm dialog will appear, you can delete the AI assistant completely by
+clicking the **Remove** button on that dialog.
 
 ![AI-Assistent-Dialogfeld löschen](doc/img/assistant-details-delete.png)
 
@@ -293,10 +292,10 @@ maßgeschneiderte Optionen, die getestet und einsatzbereit sind:
     - Text-Einbettungsmodell:
       [text-embedding-3-large](https://platform.openai.com/docs/guides/embeddings)
 
-Wenn Sie auf einen Modellpunkt in der Liste der KI-Modelle klicken, werden Sie
-zur Detailseite dieses Modells weitergeleitet. Dort finden Sie weitere
-Informationen zum Modell und können den API-Schlüssel für die OpenAI-Plattform
-ändern. Ihr API-Schlüssel ist verschlüsselt und vollständig gesichert.
+When you clicking on a model item in the AI Models list, you will be redirected
+to the details page of that model. There you can find more model information and
+change the API Key to the OpenAI platform. Your API Key is encrypted and
+completely secured.
 
 Außerdem können Sie die Verbindung zur OpenAI-Plattform testen, indem Sie auf
 die Schaltfläche „ **-Verbindung testen“** klicken. Sollte etwas schiefgehen,
@@ -321,8 +320,8 @@ einige Gründe, warum eine KI-Funktion nicht gestartet werden kann:
 - `Ivy Flow-` -Funktion: deaktiviert, wenn das System einen möglichen Fehler
   beim Ausführen des Flows erkannt hat. Beispiel: Ein erforderlicher
   Ivy-aufrufbarer Prozess konnte nicht gefunden werden.
-- `Knowledgebase-` -Funktion: deaktiviert, wenn das System den entsprechenden
-  Vektorspeicher nicht finden kann.
+- `Knowledge Base` function: disabled when the system cannot find the
+  corresponding vector store
 
 ![AI-Funktionsliste](doc/img/all-ai-functions-list.png)
 
@@ -339,10 +338,10 @@ Es wird ein Bestätigungsdialogfeld wie unten angezeigt.
 
 ![AI-Funktion löschen](doc/img/delete-ai-function.png)
 
-Bitte lesen Sie die Bestätigung sorgfältig durch, bevor Sie die KI-Funktion
-löschen. Die KI-Funktion könnte von einigen KI-Assistenten verwendet werden, und
-sobald Sie sie löschen, können die KI-Assistenten die Funktionen nicht mehr
-ausführen, oder schlimmer noch, es können Fehler auftreten.
+Please read the confirmation carefully before delete the AI function. The AI
+function could be using by some AI assitants, and once you delete it, the AI
+assistant cannot work on the functions any more, or worser, some errors may
+arise.
 
 #### Erstellen Sie Wissensdatenbanken
 
@@ -740,7 +739,7 @@ Entscheidungsprozesse zu steuern.
     "stepNo": 1,
     "type": "TEXT",
     "useAI": true,
-    "customInstruction": "Use the conversation above to summarize information of the planned project in a structured format. If user didn't provide a name for the project generete the project name based on description of the project. Example: '**Project name:** ProjectA\n**Project description:** description of projectA\n**Technologies:** tech stack\n**Members:** show member information'. Then add a line to ask if need some update",
+    "customInstruction": "Use the conversation above to summarize information of the planned project in a structured format. If user didn't provide a name for the project, generate the project name based on description of the project. Example: '**Project name:** ProjectA\n**Project description:** description of projectA\n**Technologies:** tech stack\n**Members:** show member information'. Then add a line to ask if need some update",
     "onSuccess": 2
 },
 ```
@@ -847,7 +846,7 @@ leichter zu verwenden sind.
     "customInstruction": "If in the message has an abstract date such as today, tomorrow,..., please format it. Example: today = 31, July 2024",
     "examples": [
         {
-            "before": "find leve request process",
+            "before": "find leave request process",
             "after": "find process that help creating leave request"
         },
         {
@@ -938,7 +937,7 @@ fördert.
 
 **Attribute**
 
-| Name        | Typ                                         | Beschreibung                              |
+| Name        | Typ                                         | Description                               |
 | ----------- | ------------------------------------------- | ----------------------------------------- |
 | Ergebnis    | Zeichenfolge                                | Ergebnis, das dem Benutzer angezeigt wird |
 | resultForAI | Zeichenfolge                                | Ergebnis für KI-Modell                    |
@@ -949,9 +948,9 @@ fördert.
 In diesem Abschnitt erklären wir Ihnen, wie Sie Ihren eigenen KI-Flow anhand des
 [Real world problem](#real-world-problem) als Anwendungsfall entwickeln können.
 
-> [!HINWEIS] In der [Compex-Demo](#complex-demo) haben wir eine Funktion zum
-> Auffinden von Mitarbeiterinformationen implementiert. Daher wird dringend
-> empfohlen, diese Demo nicht in Verbindung mit dieser Anleitung zu verwenden.
+> [!NOTE] In the [Complex demo](#complex-demo), we have implemented a function
+> to find employee information. Therefore, it is highly recommended not to use
+> that demo in conjunction with this guide.
 
 1. Erstellen Sie ein Ivy-Projekt, das vom Projekt „ `” (portal-components` )
    abhängt.
@@ -960,7 +959,7 @@ In diesem Abschnitt erklären wir Ihnen, wie Sie Ihren eigenen KI-Flow anhand de
    Kriterien für die Suche nach Mitarbeitern mit der Signatur
    `findEmployeesInfo(String,String,String,String) darstellen.`
 
-| Name         | Typ          | Beschreibung                                        |
+| Name         | Typ          | Description                                         |
 | ------------ | ------------ | --------------------------------------------------- |
 | `Name`       | Zeichenfolge | Name des Mitarbeiters                               |
 | `Geburtstag` | Zeichenfolge | Geburtsdatum des Mitarbeiters                       |
@@ -970,7 +969,7 @@ In diesem Abschnitt erklären wir Ihnen, wie Sie Ihren eigenen KI-Flow anhand de
 Das Ergebnis des Ivy Callable-Prozesses muss ein Objekt mit dem Namen „ `”, dem
 Ergebnis „` ” und dem Typ [AI Result DTO](#ai-result-dto) sein.
 
-| Name       | Typ                                           | Beschreibung                    |
+| Name       | Typ                                           | Description                     |
 | ---------- | --------------------------------------------- | ------------------------------- |
 | `Ergebnis` | com.axonivy.portal.components.dto.AiResultDTO | Ergebnis für den KI-Assistenten |
 
