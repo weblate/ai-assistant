@@ -3,7 +3,7 @@
 The AI Assistant is a powerful tool designed to streamline your daily work within the portal. Acting as your personal assistant, it provides seamless support for a wide range of tasks, from navigating documentation to launching processes and managing tasks and cases. With the AI Assistant at your side, you can work more efficiently and effectively, freeing up valuable time for what truly matters.
 Engage in a more interactive and intuitive workflow by conversing with the assistant about your processes instead of merely executing them. This dynamic interaction enhances your experience, allowing you to explore options and gain insights as you work. With multilingual capabilities, the AI Assistant communicates effortlessly in English, German, Spanish, and more, ensuring you receive support in your preferred language.
 
-![Chat Dashboad](doc/img/chat-dashboard.png)
+![Chat Dashboard](doc/img/chat-dashboard.png)
 
 Beyond providing immediate assistance, the AI Assistant empowers you to create and manage custom models and assistants tailored to your unique needs. With the management overview feature, designing, configuring, and organizing these models is a breeze. You can craft personalized assistants, assign specific behaviors, or leverage predefined templates to guide their actions. This level of customization ensures that your AI Assistant aligns perfectly with your preferences and work style.
 Embrace the future of work with the AI Assistant, your personalized companion for enhanced productivity and seamless task management.
@@ -58,7 +58,7 @@ Example:
 
 `The XYZ Solutions Web Development Project aims to build a state-of-the-art web application that enhances user experience and supports the company's growth objectives. Mainly use basic web technologies such as HTML and CSS, the project will deliver a secure, scalable, and efficient platform that aligns with industry standards and best practices. We need 3 engineer, 1 web designer and 2 tester for it.`
 
-#### Eror Handling Demo
+#### Error Handling Demo
 
 **Use case**
 
@@ -161,7 +161,7 @@ To apply all the changes you've made to the AI assistant details, please click t
 
 As time goes by, an AI assistant may become obsoleted and you may want to delete it and create a new AI assistant. To do that, please click the **Delete** button placed on the bottom left corner of the AI assistant details page.
 
-A confim dialog will appear, you can delete the AI assistant completely by clicking the **Remove** button on that dialog.
+A confirm dialog will appear, you can delete the AI assistant completely by clicking the **Remove** button on that dialog.
 
 ![Delete AI Assistant dialog](doc/img/assistant-details-delete.png)
 
@@ -183,7 +183,7 @@ The AI Assistant need 2 AI models to works: a GPT model, and a text embedding mo
     - GPT model: [GPT-4o mini](https://platform.openai.com/docs/models/gpt-4o-mini)
     - Text embedding model: [text-embedding-3-large](https://platform.openai.com/docs/guides/embeddings)
 
-When you clicking on a model item in the AI Models list, you will be redirected to the details page of that model. There you can find more model informations and change the API Key to the OpenAI platform. Your API Key is encrypted and completely secured.
+When you clicking on a model item in the AI Models list, you will be redirected to the details page of that model. There you can find more model information and change the API Key to the OpenAI platform. Your API Key is encrypted and completely secured.
 
 Furthermore, you can test to connection to OpenAI platform by clicking the button **Test Connection**. If something went wrong, we will show the details error
 
@@ -197,7 +197,7 @@ All AI functions that the logged in user can access are listed in the **AI Funct
 
 - `Ivy Tool` function: disabled by default because it's only be used by `Ivy Flow` functions
 - `Ivy Flow` function: disabled when system detected that there could be an error when running the flow. For example: a required Ivy callable process could not be found
-- `Knowkedge Base` function: disabled when the system cannot find the corresponding vector store
+- `Knowledge Base` function: disabled when the system cannot find the corresponding vector store
 
 ![AI Function list](doc/img/all-ai-functions-list.png)
 
@@ -209,7 +209,7 @@ You can delete the AI function completely from the AI Assistant by clicking the 
 
 ![Delete AI Function](doc/img/delete-ai-function.png)
 
-Please read the confirmation carefully before delete the AI function. The AI function could be using by some AI assitants, and once you delete it, the AI assistants cannot work on the functions any more, or worser, some errors may arise.
+Please read the confirmation carefully before delete the AI function. The AI function could be using by some AI assitants, and once you delete it, the AI assistant cannot work on the functions any more, or worser, some errors may arise.
 
 #### Create knowledge bases
 
@@ -487,7 +487,7 @@ The **Text Step** is a crucial component in AI workflows designed to display or 
     "stepNo": 1,
     "type": "TEXT",
     "useAI": true,
-    "customInstruction": "Use the conversation above to summarize information of the planned project in a structured format. If user didn't provide a name for the project generete the project name based on description of the project. Example: '**Project name:** ProjectA\n**Project description:** description of projectA\n**Technologies:** tech stack\n**Members:** show member information'. Then add a line to ask if need some update",
+    "customInstruction": "Use the conversation above to summarize information of the planned project in a structured format. If user didn't provide a name for the project, generate the project name based on description of the project. Example: '**Project name:** ProjectA\n**Project description:** description of projectA\n**Technologies:** tech stack\n**Members:** show member information'. Then add a line to ask if need some update",
     "onSuccess": 2
 },
 ```
@@ -571,7 +571,7 @@ The **Rephrase step** is designed to help AI refine user input before executing 
     "customInstruction": "If in the message has an abstract date such as today, tomorrow,..., please format it. Example: today = 31, July 2024",
     "examples": [
         {
-            "before": "find leve request process",
+            "before": "find leave request process",
             "after": "find process that help creating leave request"
         },
         {
@@ -645,7 +645,7 @@ The Result DTO ensures that the AI Assistant provides reliable and consistent re
 
 **Attributes**
 
-| Name | Type | Decription |
+| Name | Type | Description |
 | --- | --- | --- |
 | result | String | result to show for user |
 | resultForAI | String | result for AI model |
@@ -656,13 +656,13 @@ The Result DTO ensures that the AI Assistant provides reliable and consistent re
 In this section, we will explain how to develop your own AI Flow using the [Real world problem](#real-world-problem) as a use case.
 
 > [!NOTE]
-> In the [Compex demo](#complex-demo), we have implemented a function to find employee information. Therefore, it is highly recommended not to use that demo in conjunction with this guide.
+> In the [Complex demo](#complex-demo), we have implemented a function to find employee information. Therefore, it is highly recommended not to use that demo in conjunction with this guide.
 
 1. Create an Ivy project that depends on the `portal-components` project
 
 2. Create an Ivy Callable process with input parameters representing the criteria for finding employees with the signature `findEmployeesInfo(String,String,String,String)`
 
-| Name | Type | Decription |
+| Name | Type | Description |
 | --- | --- | --- |
 | `name` | String | Name of the employee |
 | `birthday` | String | Employee's date of birth |
@@ -671,7 +671,7 @@ In this section, we will explain how to develop your own AI Flow using the [Real
 
 The output result of the Ivy Callable process must be an object has name `result`, and type [AI Result DTO](#ai-result-dto).
 
-| Name | Type | Decription |
+| Name | Type | Description |
 | --- | --- | --- |
 | `result` | com.axonivy.portal.components.dto.AiResultDTO | Result for the AI Assistant |
 
