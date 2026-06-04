@@ -9,6 +9,64 @@ const IFRAME_TAG_END = '</iframe>';
 const HLJS_LANGUAGE_PREFIX = 'language-';
 const IFRAME_REGEX = /<iframe>(.*?)<\/iframe>/;
 
+// XSS hardening ------------------------------------------------------------------
+// AI-generated responses are rendered as rich HTML (markdown, highlighted code,
+// images, links and embedded Ivy process <iframe> widgets). Unlike user messages,
+// they are not escaped, so a prompt-injected or knowledge-base-poisoned reply could
+// inject active markup. Mirror Portal's server-side jsoup Safelist.relaxed policy
+// on the client with DOMPurify: keep formatting tags + class/style + relative links,
+// allow the process-widget <iframe> only with a same-origin (relative) src, and strip
+// <script>, event handlers and dangerous URL schemes.
+const AI_HTML_SANITIZE_CONFIG = {
+  ADD_TAGS: ['iframe'],
+  ADD_ATTR: ['target', 'allow', 'allowfullscreen', 'frameborder'],
+  ALLOW_DATA_ATTR: true
+};
+
+// The process widget embeds a relative URL (AssistantUtils IFRAME -> getRelative()),
+// so only same-origin/relative http(s) sources are legitimate. Everything else
+// (javascript:/data:/blob: or an external host) is rejected.
+const isSafeIframeSrc = src => {
+  if (!src) {
+    return false;
+  }
+  try {
+    const url = new URL(src, window.location.origin);
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.origin === window.location.origin;
+  } catch (e) {
+    return false;
+  }
+};
+
+let aiSanitizerHookRegistered = false;
+const registerAiSanitizerHook = () => {
+  if (aiSanitizerHookRegistered || typeof DOMPurify === 'undefined') {
+    return;
+  }
+  DOMPurify.addHook('afterSanitizeAttributes', node => {
+    if (node.tagName === 'IFRAME' && !isSafeIframeSrc(node.getAttribute('src'))) {
+      node.remove();
+    }
+  });
+  aiSanitizerHookRegistered = true;
+};
+
+// Sanitize AI-generated HTML before it is assigned to innerHTML.
+const sanitizeAiHtml = dirty => {
+  if (dirty == null) {
+    return dirty;
+  }
+  if (typeof DOMPurify === 'undefined') {
+    // Fail closed: render untrusted content as inert text if the sanitizer is missing.
+    const holder = document.createElement('div');
+    holder.textContent = String(dirty);
+    return holder.innerHTML;
+  }
+  registerAiSanitizerHook();
+  return DOMPurify.sanitize(String(dirty), AI_HTML_SANITIZE_CONFIG);
+};
+// --------------------------------------------------------------------------------
+
 // Helper Functions
 
 // Converts an HTML element to its string representation.

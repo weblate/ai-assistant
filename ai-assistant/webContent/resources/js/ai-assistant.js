@@ -712,7 +712,7 @@ function ViewAI(uri) {
       // Escape meta-characters (preserving <br/>)
       message = escapeHtmlExceptBr(messageWrapper.message.replaceAll('\r\n', '<br/>').replaceAll('\n', '<br/>'));
     } else {
-      message = parseMessage(messageWrapper);
+      message = sanitizeAiHtml(parseMessage(messageWrapper));
     }
 
     // Set message content
@@ -746,7 +746,7 @@ function ViewAI(uri) {
 
     // Clone message template
     const cloneTemplate = originalMessageTemplate.cloneNode(true);
-    const message = parseMessage(streamingValue);
+    const message = sanitizeAiHtml(parseMessage(streamingValue));
 
     // Set message content
     cloneTemplate.getElementsByClassName('js-message')[0].innerHTML = message;
@@ -795,7 +795,7 @@ function ViewAI(uri) {
     }
 
     // Update existing streaming message
-    streamingMessage.get(0).innerHTML = cloneTemplate.innerHTML;
+    streamingMessage.get(0).innerHTML = sanitizeAiHtml(cloneTemplate.innerHTML);
 
     // While streaming the response, show text instead of image
     const renderer = new marked.Renderer();
@@ -806,7 +806,7 @@ function ViewAI(uri) {
     marked.use({ renderer });
 
     if (!isIFrame(streamingMessage.get(0).innerHTML)) {
-        streamingMessage.find('.js-message').get(0).innerHTML = marked.parse(streamingText);
+        streamingMessage.find('.js-message').get(0).innerHTML = sanitizeAiHtml(marked.parse(streamingText));
         streamingMessage.find('.js-message').find('img').remove();
         streamingMessage.find('.js-message').find('em').addClass('block');
         streamingMessage.find('.js-message').find('a').attr('target', '_blank').addClass('underline');
@@ -824,7 +824,7 @@ function ViewAI(uri) {
     marked.use({ renderer: new marked.Renderer() });
     marked.setOptions(marked.getDefaults());
 
-    let converted = isIFrame(streamingValue) ? convertIFrame(streamingValue) : marked.parse(streamingValue);
+    let converted = sanitizeAiHtml(isIFrame(streamingValue) ? convertIFrame(streamingValue) : marked.parse(streamingValue));
 
     if (typeof jsMessageList !== 'undefined') {
       const messageList = $(jsMessageList);
