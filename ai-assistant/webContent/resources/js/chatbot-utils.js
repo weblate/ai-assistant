@@ -12,14 +12,17 @@ const IFRAME_REGEX = /<iframe>(.*?)<\/iframe>/;
 // AI-generated responses are rendered as rich HTML (markdown, highlighted code,
 // images, links and embedded Ivy process <iframe> widgets). Unlike user messages,
 // they are not escaped, so a prompt-injected or knowledge-base-poisoned reply could
-// inject active markup. Mirror Portal's server-side jsoup Safelist.relaxed policy
-// on the client with DOMPurify: keep formatting tags + class/style + relative links,
-// allow the process-widget <iframe> only with a same-origin (relative) src, and strip
-// <script>, event handlers and dangerous URL schemes.
+// inject active markup. Mirror Portal's server-side jsoup Safelist.relaxed policy with
+// an explicit DOMPurify allowlist of only the tags/attributes we actually render (plus
+// the process-widget <iframe>). Everything else -- <script>, form/input and other
+// interactive elements, event handlers and dangerous URL schemes -- is stripped.
 const AI_HTML_SANITIZE_CONFIG = {
-  ADD_TAGS: ['iframe'],
-  ADD_ATTR: ['target', 'allow', 'allowfullscreen', 'frameborder'],
-  ALLOW_DATA_ATTR: true
+  ALLOWED_TAGS: ['a', 'p', 'br', 'hr', 'b', 'strong', 'i', 'em', 'u', 's', 'del',
+    'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img', 'span', 'div', 'iframe'],
+  ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target', 'rel', 'class', 'style', 'id',
+    'align', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen'],
+  ALLOW_DATA_ATTR: false
 };
 
 // The process widget embeds a relative URL (AssistantUtils IFRAME -> getRelative()),
