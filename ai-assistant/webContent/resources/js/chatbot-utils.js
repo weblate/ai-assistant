@@ -9,7 +9,6 @@ const IFRAME_TAG_END = '</iframe>';
 const HLJS_LANGUAGE_PREFIX = 'language-';
 const IFRAME_REGEX = /<iframe>(.*?)<\/iframe>/;
 
-// XSS hardening ------------------------------------------------------------------
 // AI-generated responses are rendered as rich HTML (markdown, highlighted code,
 // images, links and embedded Ivy process <iframe> widgets). Unlike user messages,
 // they are not escaped, so a prompt-injected or knowledge-base-poisoned reply could
@@ -65,7 +64,6 @@ const sanitizeAiHtml = dirty => {
   registerAiSanitizerHook();
   return DOMPurify.sanitize(String(dirty), AI_HTML_SANITIZE_CONFIG);
 };
-// --------------------------------------------------------------------------------
 
 // Helper Functions
 
