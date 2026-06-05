@@ -9,13 +9,9 @@ const IFRAME_TAG_END = '</iframe>';
 const HLJS_LANGUAGE_PREFIX = 'language-';
 const IFRAME_REGEX = /<iframe>(.*?)<\/iframe>/;
 
-// AI-generated responses are rendered as rich HTML (markdown, highlighted code,
-// images, links and embedded Ivy process <iframe> widgets). Unlike user messages,
-// they are not escaped, so a prompt-injected or knowledge-base-poisoned reply could
-// inject active markup. Mirror Portal's server-side jsoup Safelist.relaxed policy with
-// an explicit DOMPurify allowlist of only the tags/attributes we actually render (plus
-// the process-widget <iframe>). Everything else -- <script>, form/input and other
-// interactive elements, event handlers and dangerous URL schemes -- is stripped.
+// AI replies are rendered as HTML via innerHTML and, unlike user messages, are not
+// escaped. Restrict them to an explicit allowlist of only the tags/attributes we
+// actually render (markdown, code, images, links, tables) plus the process <iframe>.
 const AI_HTML_SANITIZE_CONFIG = {
   ALLOWED_TAGS: ['a', 'p', 'br', 'hr', 'b', 'strong', 'i', 'em', 'u', 's', 'del',
     'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
