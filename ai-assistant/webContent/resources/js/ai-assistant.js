@@ -440,7 +440,11 @@ function Assistant(ivyUri, uri, view, assistantId, conversationId, username) {
 
   function executeResult(resultForAI) {
     if (resultForAI && resultForAI.startsWith('<execute>') && resultForAI.endsWith('</execute>')) {
-      let link = resultForAI.replace('<execute>', '').replace('</execute>', '');
+      // Slice the wrapper out by length (robust even if the payload itself contains
+      // '</execute>') and trim once, so the string we validate is exactly the string we navigate to.
+      const link = resultForAI
+        .slice('<execute>'.length, resultForAI.length - '</execute>'.length)
+        .trim();
       if (isSafeRedirectUrl(link)) {
         parent.redirectToUrlCommand([{ name: 'url', value: link }]);
       } else {
