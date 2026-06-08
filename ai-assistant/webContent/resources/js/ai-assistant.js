@@ -441,7 +441,38 @@ function Assistant(ivyUri, uri, view, assistantId, conversationId, username) {
   function executeResult(resultForAI) {
     if (resultForAI && resultForAI.startsWith('<execute>') && resultForAI.endsWith('</execute>')) {
       let link = resultForAI.replace('<execute>', '').replace('</execute>', '');
-      parent.redirectToUrlCommand([{ name: 'url', value: link }]);
+      if (isSafeRedirectUrl(link)) {
+        parent.redirectToUrlCommand([{ name: 'url', value: link }]);
+      } else {
+        console.warn('AI Assistant: blocked navigation to unsafe URL', link);
+      }
+    }
+  }
+
+  // Allow ONLY same-origin http(s) navigation (including relative URLs).
+  // Rejects javascript:/data:/vbscript:/file:/blob:, protocol-relative (//host),
+  // backslash/path-confusion (/\host), userinfo host-spoof (https://trusted@evil)
+  // and any cross-origin redirect. Built on the browser's WHATWG URL parser plus an
+  // allowlist (scheme + origin) rather than a denylist, so scheme case, control-char
+  // / whitespace scheme-splits and slash variants are canonicalized the same way the
+  // real navigation would be. The percent-decode pass stops an encoded scheme
+  // (e.g. %6aavascript:) from slipping through as a relative path.
+  function isSafeRedirectUrl(url) {
+    if (typeof url !== 'string' || url.trim() === '') {
+      return false;
+    }
+    let candidate = url.trim();
+    try {
+      candidate = decodeURIComponent(candidate);
+    } catch (e) {
+      // not validly percent-encoded -- validate the raw trimmed value instead
+    }
+    try {
+      const parsed = new URL(candidate, window.location.origin);
+      const isHttp = parsed.protocol === 'https:' || parsed.protocol === 'http:';
+      return isHttp && parsed.origin === window.location.origin;
+    } catch (e) {
+      return false;
     }
   }
 
