@@ -441,7 +441,10 @@ function Assistant(ivyUri, uri, view, assistantId, conversationId, username) {
   function executeResult(resultForAI) {
     if (resultForAI && resultForAI.startsWith('<execute>') && resultForAI.endsWith('</execute>')) {
       // Slice the wrapper out by length (robust even if the payload itself contains
-      // '</execute>') and trim once, so the string we validate is exactly the string we navigate to.
+      // '</execute>') and trim once before validation. isSafeRedirectUrl percent-decodes
+      // the value internally before parsing (to catch encoded-scheme bypasses such as
+      // %6aavascript:), so the validated string may differ from the raw trimmed string
+      // that is passed to redirectToUrlCommand.
       const link = resultForAI
         .slice('<execute>'.length, resultForAI.length - '</execute>'.length)
         .trim();
