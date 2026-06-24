@@ -9,6 +9,61 @@ const IFRAME_TAG_END = '</iframe>';
 const HLJS_LANGUAGE_PREFIX = 'language-';
 const IFRAME_REGEX = /<iframe>(.*?)<\/iframe>/;
 
+// AI replies are rendered as HTML via innerHTML and, unlike user messages, are not
+// escaped. Restrict them to an explicit allowlist of only the tags/attributes we
+// actually render (markdown, code, images, links, tables) plus the process <iframe>.
+const AI_HTML_SANITIZE_CONFIG = {
+  ALLOWED_TAGS: ['a', 'p', 'br', 'hr', 'b', 'strong', 'i', 'em', 'u', 's', 'del',
+    'code', 'pre', 'blockquote', 'ul', 'ol', 'li', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'table', 'thead', 'tbody', 'tr', 'th', 'td', 'img', 'span', 'div', 'iframe'],
+  ALLOWED_ATTR: ['href', 'src', 'alt', 'title', 'target', 'rel', 'class', 'style', 'id',
+    'align', 'width', 'height', 'frameborder', 'allow', 'allowfullscreen'],
+  ALLOW_DATA_ATTR: false
+};
+
+// The process widget embeds a relative URL (AssistantUtils IFRAME -> getRelative()),
+// so only same-origin/relative http(s) sources are legitimate. Everything else
+// (javascript:/data:/blob: or an external host) is rejected.
+const isSafeIframeSrc = src => {
+  if (!src) {
+    return false;
+  }
+  try {
+    const url = new URL(src, window.location.origin);
+    return (url.protocol === 'http:' || url.protocol === 'https:') && url.origin === window.location.origin;
+  } catch (e) {
+    return false;
+  }
+};
+
+let aiSanitizerHookRegistered = false;
+const registerAiSanitizerHook = () => {
+  if (aiSanitizerHookRegistered || typeof DOMPurify === 'undefined') {
+    return;
+  }
+  DOMPurify.addHook('afterSanitizeAttributes', node => {
+    if (node.tagName === 'IFRAME' && !isSafeIframeSrc(node.getAttribute('src'))) {
+      node.remove();
+    }
+  });
+  aiSanitizerHookRegistered = true;
+};
+
+// Sanitize AI-generated HTML before it is assigned to innerHTML.
+const sanitizeAiHtml = dirty => {
+  if (dirty == null) {
+    return dirty;
+  }
+  if (typeof DOMPurify === 'undefined') {
+    // Fail closed: render untrusted content as inert text if the sanitizer is missing.
+    const holder = document.createElement('div');
+    holder.textContent = String(dirty);
+    return holder.innerHTML;
+  }
+  registerAiSanitizerHook();
+  return DOMPurify.sanitize(String(dirty), AI_HTML_SANITIZE_CONFIG);
+};
+
 // Helper Functions
 
 // Converts an HTML element to its string representation.
