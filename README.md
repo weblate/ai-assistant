@@ -1,9 +1,9 @@
 # AI Assistant
 
-> [!CAUTION]
-> ## Deprecated
-> These connectors are deprecated and will no longer be maintained or supported. It will be removed in Release 13.
+> [!WARNING]
+> This connector is deprecated and will no longer be maintained or supported. It will be removed in Release 13.
 >
+> **Successor**: [smart-workflow](https://github.com/axonivy-market/smart-workflow/)
 
 [![CI Build](https://github.com/axonivy-market/ai-assistant/actions/workflows/ci.yml/badge.svg)](https://github.com/axonivy-market/ai-assistant/actions/workflows/ci.yml)
 
